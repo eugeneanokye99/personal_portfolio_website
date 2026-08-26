@@ -10,19 +10,7 @@ export function Hero() {
   const downloadCvRef = useMagnetic<HTMLAnchorElement>();
 
   return (
-    <section
-      id="hero"
-      style={{
-        maxWidth: "var(--maxw)",
-        margin: "0 auto",
-        padding: "84px 28px 96px",
-        minHeight: "calc(100vh - 64px)",
-        display: "grid",
-        gridTemplateColumns: "1.05fr .95fr",
-        gap: 48,
-        alignItems: "center",
-      }}
-    >
+    <section id="hero" className="section--hero grid-hero">
       <Reveal>
         <div
           style={{

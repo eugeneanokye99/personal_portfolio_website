@@ -122,5 +122,5 @@ export function HeroCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{ width: "100%", height: 440, display: "block" }} />;
+  return <canvas ref={canvasRef} className="hero-canvas" />;
 }

@@ -6,7 +6,7 @@ import { TerminalBio } from "./TerminalBio";
 
 export function About() {
   return (
-    <section id="about" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "100px 28px" }}>
+    <section id="about" className="section">
       <Reveal style={{ fontFamily: "var(--font-mono)", color: "var(--primary)", fontSize: 13, marginBottom: 8 }}>
         // about
       </Reveal>
@@ -24,7 +24,7 @@ export function About() {
         The engineer behind the commits
       </Reveal>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 48, alignItems: "center" }}>
+      <div className="grid-about">
         <Reveal>
           <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 24 }}>
             <div style={{ position: "relative", width: 74, height: 74, flex: "none" }}>

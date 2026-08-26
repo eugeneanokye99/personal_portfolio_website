@@ -7,7 +7,7 @@ import { statsData } from "@/lib/data";
 
 export function Activity() {
   return (
-    <section id="activity" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "100px 28px" }}>
+    <section id="activity" className="section">
       <Reveal style={{ fontFamily: "var(--font-mono)", color: "var(--primary)", fontSize: 13, marginBottom: 8 }}>
         // activity_log
       </Reveal>
@@ -25,7 +25,7 @@ export function Activity() {
         Shipping in public
       </Reveal>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 18, marginBottom: 34 }}>
+      <div className="grid-stats" style={{ marginBottom: 34 }}>
         {statsData.map((stat) => (
           <StatCard key={stat.label} stat={stat} />
         ))}

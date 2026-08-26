@@ -6,7 +6,7 @@ import { stackData } from "@/lib/data";
 
 export function Stack() {
   return (
-    <section id="stack" style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "100px 28px" }}>
+    <section id="stack" className="section">
       <Reveal style={{ fontFamily: "var(--font-mono)", color: "var(--primary)", fontSize: 13, marginBottom: 8 }}>
         // tech_stack.json
       </Reveal>
@@ -27,7 +27,7 @@ export function Stack() {
         // proficiency fills as you scroll · click a block to collapse
       </Reveal>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
+      <div className="grid-stack">
         {stackData.map((category) => (
           <StackCategory key={category.key} category={category} />
         ))}

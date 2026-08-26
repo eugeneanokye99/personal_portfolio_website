@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { navLinks } from "@/lib/data";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -8,6 +8,7 @@ export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [spinning, setSpinning] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -25,10 +26,30 @@ export function Navbar() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 760) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const handleToggle = () => {
     toggleTheme();
     setSpinning(true);
     setTimeout(() => setSpinning(false), 400);
+  };
+
+  const linkStyle = (id: string): CSSProperties => {
+    const active = activeId === id;
+    return {
+      color: active ? "var(--primary)" : "var(--text2)",
+      background: active ? "var(--tint)" : "transparent",
+      textDecoration: "none",
+      padding: "8px 12px",
+      borderRadius: 6,
+      transition: "color .15s",
+    };
   };
 
   return (
@@ -89,34 +110,37 @@ export function Navbar() {
             eugene<span style={{ color: "var(--primary)" }}>.</span>anokye
           </span>
         </a>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-            fontFamily: "var(--font-mono)",
-            fontSize: 13,
-          }}
-        >
-          {navLinks.map((l) => {
-            const active = activeId === l.href.slice(1);
-            return (
-              <a
-                key={l.href}
-                href={l.href}
-                style={{
-                  color: active ? "var(--primary)" : "var(--text2)",
-                  background: active ? "var(--tint)" : "transparent",
-                  textDecoration: "none",
-                  padding: "8px 12px",
-                  borderRadius: 6,
-                  transition: "color .15s",
-                }}
-              >
+
+        <div style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "var(--font-mono)", fontSize: 13 }}>
+          <div className="nav-links">
+            {navLinks.map((l) => (
+              <a key={l.href} href={l.href} style={linkStyle(l.href.slice(1))}>
                 {l.label}
               </a>
-            );
-          })}
+            ))}
+          </div>
+
+          <button
+            className="nav-hamburger-btn"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            style={{
+              width: 38,
+              height: 38,
+              alignItems: "center",
+              justifyContent: "center",
+              border: "1px solid var(--border)",
+              background: "var(--surface)",
+              color: "var(--primary)",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontSize: 15,
+            }}
+          >
+            {mobileOpen ? "✕" : "☰"}
+          </button>
+
           <button
             onClick={handleToggle}
             aria-label="Toggle theme"
@@ -142,6 +166,37 @@ export function Navbar() {
           </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            padding: 14,
+            background: "var(--surface)",
+            borderBottom: "1px solid var(--border)",
+            boxShadow: "0 24px 40px -24px var(--glow)",
+            fontFamily: "var(--font-mono)",
+            fontSize: 14,
+          }}
+        >
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+              style={{ ...linkStyle(l.href.slice(1)), padding: "12px 14px" }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }

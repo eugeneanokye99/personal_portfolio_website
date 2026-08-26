@@ -17,7 +17,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" style={{ maxWidth: 920, margin: "0 auto", padding: "100px 28px 110px", textAlign: "center" }}>
+    <section id="contact" className="section--contact">
       <Reveal style={{ fontFamily: "var(--font-mono)", color: "var(--primary)", fontSize: 13, marginBottom: 8 }}>
         // reach_out()
       </Reveal>
