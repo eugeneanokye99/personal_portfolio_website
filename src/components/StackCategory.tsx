@@ -7,6 +7,7 @@ import type { StackCategory as StackCategoryData } from "@/lib/data";
 
 export function StackCategory({ category }: { category: StackCategoryData }) {
   const [open, setOpen] = useState(true);
+  const [maxHeight, setMaxHeight] = useState<string>("none");
   const panelRef = useRef<HTMLDivElement>(null);
 
   const toggle = () => {
@@ -16,18 +17,20 @@ export function StackCategory({ category }: { category: StackCategoryData }) {
       return;
     }
     if (open) {
-      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      // pin to current pixel height first so the browser has something to animate from
+      setMaxHeight(`${panel.scrollHeight}px`);
       requestAnimationFrame(() => {
-        panel.style.maxHeight = "0px";
+        requestAnimationFrame(() => setMaxHeight("0px"));
       });
       setOpen(false);
     } else {
-      panel.style.maxHeight = "0px";
-      requestAnimationFrame(() => {
-        panel.style.maxHeight = `${panel.scrollHeight}px`;
-      });
+      setMaxHeight(`${panel.scrollHeight}px`);
       setOpen(true);
     }
+  };
+
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.propertyName === "max-height" && open) setMaxHeight("none");
   };
 
   return (
@@ -70,11 +73,12 @@ export function StackCategory({ category }: { category: StackCategoryData }) {
       </button>
       <div
         ref={panelRef}
+        onTransitionEnd={handleTransitionEnd}
         style={{
           padding: open ? "8px 20px 18px" : "0 20px",
           display: "grid",
           gap: 6,
-          maxHeight: open ? "none" : "0px",
+          maxHeight,
           opacity: open ? 1 : 0,
           overflow: "hidden",
           transition: "max-height .4s var(--ease), opacity .3s, padding .3s",

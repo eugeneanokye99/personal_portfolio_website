@@ -1,9 +1,9 @@
 "use client";
 
-import { CSSProperties, ElementType, ReactNode } from "react";
+import { CSSProperties, ElementType, HTMLAttributes, ReactNode } from "react";
 import { useInView } from "@/hooks/useInView";
 
-type RevealProps = {
+type RevealProps = HTMLAttributes<HTMLElement> & {
   children: ReactNode;
   as?: ElementType;
   style?: CSSProperties;
@@ -11,7 +11,7 @@ type RevealProps = {
 };
 
 /** Fades + slides content up once it scrolls into view — the site-wide reveal effect. */
-export function Reveal({ children, as = "div", style, className }: RevealProps) {
+export function Reveal({ children, as = "div", style, className, ...rest }: RevealProps) {
   const [ref, revealed] = useInView<HTMLElement>();
   const Comp = as;
   return (
@@ -24,6 +24,7 @@ export function Reveal({ children, as = "div", style, className }: RevealProps) 
         transition: "opacity .7s var(--ease), transform .7s var(--ease)",
         ...style,
       }}
+      {...rest}
     >
       {children}
     </Comp>
