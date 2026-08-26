@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_ds/amalitech-design-system-019e2168-5801-7f30-8c31-130ff88f4c01/colors_and_type.css">
+<script src="_ds/amalitech-design-system-019e2168-5801-7f30-8c31-130ff88f4c01/_ds_bundle.js"></script>
+<style>
+  :root{
+    --bg:#04040f; --surface:#0a0b1e; --surface-2:#0d0f26; --primary:#000beb;
+    --text:#e8eaff; --text2:#8890cc; --border:#1a1f4a; --tint:rgba(0,11,235,.12);
+    --glow:rgba(0,11,235,.55); --grid:rgba(0,11,235,.10); --code:#5d66c9;
+    --ok:#2bd4a0; --warn:#ffb020; --ease:cubic-bezier(.16,1,.3,1);
+    --maxw:1280px;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5ff; --surface:#ffffff; --surface-2:#fbfbff; --primary:#0109a2;
+    --text:#0a0a1a; --text2:#3a3a6a; --border:#d0d4f7; --tint:rgba(1,9,162,.07);
+    --glow:rgba(1,9,162,.18); --grid:rgba(1,9,162,.08); --code:#4b53c9;
+    --ok:#057a55; --warn:#b06b00;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
+    transition:background-color .5s var(--ease),color .5s var(--ease);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  ::selection{background:var(--primary);color:#fff;}
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes scan{0%{transform:translateY(-120%)}100%{transform:translateY(120%)}}
+  @keyframes ringPulse{0%{transform:scale(.9);opacity:.7}80%{transform:scale(1.8);opacity:0}100%{opacity:0}}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes glowPulse{0%,100%{box-shadow:0 0 0 1px var(--border),0 0 24px -8px var(--glow)}50%{box-shadow:0 0 0 1px var(--primary),0 0 40px -4px var(--glow)}}
+  @keyframes dashRun{to{stroke-dashoffset:0}}
+  @keyframes barShine{0%{transform:translateX(-100%)}100%{transform:translateX(220%)}}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative;min-height:100vh;background:var(--bg);color:var(--text);transition:background-color .5s var(--ease),color .5s var(--ease);">
+
+  <!-- code rain -->
+  <canvas ref="{{ rainRef }}" aria-hidden="true" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:.06;"></canvas>
+  <!-- parallax grid -->
+  <div ref="{{ gridRef }}" aria-hidden="true" style="position:fixed;inset:-60px;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000 30%,transparent 80%);will-change:transform;"></div>
+
+  <!-- cursor trailer -->
+  <div ref="{{ cursorRef }}" aria-hidden="true" style="position:fixed;top:0;left:0;width:26px;height:26px;border:1.5px solid var(--primary);border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),background-color .2s;box-shadow:0 0 18px -2px var(--glow);mix-blend-mode:normal;"></div>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav style="position:sticky;top:0;z-index:1000;height:64px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
+    <div style="max-width:var(--maxw);height:100%;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="#hero" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:800;letter-spacing:-.02em;font-size:17px;">
+        <span style="display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border:1.5px solid var(--primary);border-radius:7px;color:var(--primary);box-shadow:0 0 16px -4px var(--glow);">~</span>
+        <span>eugene<span style="color:var(--primary);">.</span>anokye</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:13px;">
+        <a data-navlink href="#about" style="color:var(--text2);text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s;">about</a>
+        <a data-navlink href="#stack" style="color:var(--text2);text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s;">stack</a>
+        <a data-navlink href="#projects" style="color:var(--text2);text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s;">projects</a>
+        <a data-navlink href="#activity" style="color:var(--text2);text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s;">activity</a>
+        <a data-navlink href="#contact" style="color:var(--text2);text-decoration:none;padding:8px 12px;border-radius:6px;transition:color .15s;">contact</a>
+        <button onClick="{{ toggleTheme }}" aria-label="Toggle theme" style="margin-left:8px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);background:var(--surface);color:var(--primary);border-radius:8px;cursor:pointer;transition:transform .4s var(--ease),border-color .2s;">
+          <span ref="{{ themeIconRef }}" style="display:inline-block;font-size:16px;line-height:1;"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main style="position:relative;z-index:2;">
+
+    <!-- ============ HERO ============ -->
+    <section id="hero" style="max-width:var(--maxw);margin:0 auto;padding:84px 28px 96px;min-height:calc(100vh - 64px);display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;">
+      <div data-reveal>
+        <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text2);padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);margin-bottom:26px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px 0 var(--ok);"></span>
+          available for backend &amp; systems work
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:14px;margin-bottom:10px;">&gt; whoami</div>
+        <h1 style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(40px,6vw,72px);line-height:1.02;letter-spacing:-.04em;margin:0 0 18px;color:var(--text);">
+          Eugene<br>Anokye<span style="color:var(--primary);">_</span>
+        </h1>
+        <div style="font-family:'Fira Code',monospace;font-size:clamp(16px,2vw,20px);color:var(--text2);min-height:30px;margin-bottom:14px;">
+          <span style="color:var(--code);">const</span> role <span style="color:var(--code);">=</span> <span style="color:var(--primary);">"</span><span ref="{{ roleRef }}" style="color:var(--text);"></span><span style="color:var(--primary);">"</span>
+        </div>
+        <p style="max-width:480px;font-size:16.5px;line-height:1.65;color:var(--text2);margin:0 0 32px;">
+          Backend engineer at Amali-Tech, Ghana. I build scalable, maintainable, production-ready systems — clean architecture, distributed services, and APIs that hold up under load.
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="#projects" data-magnet style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;color:#fff;background:var(--primary);padding:14px 22px;border-radius:8px;text-decoration:none;box-shadow:0 8px 30px -8px var(--glow);transition:transform .18s var(--ease),box-shadow .25s;">
+            View Projects <span style="font-size:15px;">→</span>
+          </a>
+          <a href="#" data-cv data-magnet style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;color:var(--text);background:transparent;padding:14px 22px;border-radius:8px;text-decoration:none;border:1px solid var(--border);transition:transform .18s var(--ease),border-color .2s,background-color .2s;">
+            Download CV <span style="font-size:14px;color:var(--primary);">↓</span>
+          </a>
+        </div>
+      </div>
+
+      <div data-reveal style="position:relative;">
+        <canvas ref="{{ heroRef }}" style="width:100%;height:440px;display:block;"></canvas>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" style="max-width:var(--maxw);margin:0 auto;padding:100px 28px;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:13px;margin-bottom:8px;">// about</div>
+      <h2 data-reveal style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(28px,4vw,42px);letter-spacing:-.03em;margin:0 0 44px;color:var(--text);">The engineer behind the commits</h2>
+      <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:center;">
+        <div data-reveal>
+          <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;">
+            <div style="position:relative;width:74px;height:74px;flex:none;">
+              <div style="position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--primary);animation:glowPulse 3s var(--ease) infinite;"></div>
+              <div style="width:74px;height:74px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:26px;color:var(--primary);">EA</div>
+            </div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:var(--text);">Eugene Anokye</div>
+              <div style="font-family:'Fira Code',monospace;font-size:13px;color:var(--text2);">Backend Software Engineer · Amali-Tech</div>
+            </div>
+          </div>
+          <p style="font-size:16.5px;line-height:1.7;color:var(--text2);margin:0 0 18px;">
+            I think in services, contracts, and failure modes. My work centers on the parts of a product users never see but always feel — the data models that stay sane at scale, the APIs that stay backward-compatible, the queues that absorb the spike.
+          </p>
+          <p style="font-size:16.5px;line-height:1.7;color:var(--text2);margin:0;">
+            Lately that means Java and Spring Boot in production, sharpened by an ongoing habit of system-design study and daily algorithm practice. I care about clean code because the next engineer to read it deserves a good day.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 24px 60px -28px var(--glow);">
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+              <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
+              <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></span>
+              <span style="width:11px;height:11px;border-radius:50%;background:#28c840;"></span>
+              <span style="margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);">bio.sh — zsh</span>
+            </div>
+            <div ref="{{ termRef }}" style="padding:20px 22px;font-family:'Fira Code',monospace;font-size:13.5px;line-height:1.95;min-height:280px;color:var(--text);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TECH STACK ============ -->
+    <section id="stack" style="max-width:var(--maxw);margin:0 auto;padding:100px 28px;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:13px;margin-bottom:8px;">// tech_stack.json</div>
+      <h2 data-reveal style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(28px,4vw,42px);letter-spacing:-.03em;margin:0 0 8px;color:var(--text);">The toolchain</h2>
+      <p data-reveal style="font-family:'Fira Code',monospace;color:var(--text2);font-size:13.5px;margin:0 0 40px;">// proficiency fills as you scroll · click a block to collapse</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;" data-stack-grid></div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" style="max-width:var(--maxw);margin:0 auto;padding:100px 28px;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:13px;margin-bottom:8px;">// pinned_repos[]</div>
+      <h2 data-reveal style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(28px,4vw,42px);letter-spacing:-.03em;margin:0 0 40px;color:var(--text);">Things I&#39;ve built</h2>
+      <div data-projects style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;"></div>
+    </section>
+
+    <!-- ============ GITHUB ACTIVITY ============ -->
+    <section id="activity" style="max-width:var(--maxw);margin:0 auto;padding:100px 28px;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:13px;margin-bottom:8px;">// activity_log</div>
+      <h2 data-reveal style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(28px,4vw,42px);letter-spacing:-.03em;margin:0 0 40px;color:var(--text);">Shipping in public</h2>
+
+      <div data-stats style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:34px;"></div>
+
+      <div data-reveal style="border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:24px 26px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);">contributions <span style="color:var(--text2);">· last 12 months</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);">
+            less
+            <span data-legend style="display:inline-flex;gap:3px;"></span>
+            more
+          </div>
+        </div>
+        <div data-graph style="display:flex;gap:3px;overflow-x:auto;padding-bottom:4px;"></div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" style="max-width:920px;margin:0 auto;padding:100px 28px 110px;text-align:center;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:13px;margin-bottom:8px;">// reach_out()</div>
+      <h2 data-reveal style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(30px,5vw,52px);letter-spacing:-.03em;margin:0 0 18px;color:var(--text);">Let&#39;s build something solid</h2>
+      <p data-reveal style="font-size:17px;line-height:1.65;color:var(--text2);max-width:560px;margin:0 auto 40px;">
+        Open to backend-heavy systems, APIs, distributed services, and clean-code collaborations.
+      </p>
+
+      <div data-reveal style="display:flex;flex-direction:column;gap:12px;max-width:440px;margin:0 auto 48px;font-family:'Fira Code',monospace;font-size:15px;">
+        <a data-ripple href="https://www.linkedin.com/in/eugene-anokye" target="_blank" rel="noopener" style="position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;color:var(--text);transition:border-color .2s,transform .18s var(--ease);">
+          <span style="color:var(--primary);font-weight:600;">linkedin</span><span style="color:var(--text2);">.connect(</span><span style="color:var(--ok);">"eugene-anokye"</span><span style="color:var(--text2);">)</span>
+          <span style="margin-left:auto;color:var(--primary);">↗</span>
+        </a>
+        <a data-ripple href="https://github.com/eugeneanokye99" target="_blank" rel="noopener" style="position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;color:var(--text);transition:border-color .2s,transform .18s var(--ease);">
+          <span style="color:var(--primary);font-weight:600;">github</span><span style="color:var(--text2);">.follow(</span><span style="color:var(--ok);">"eugeneanokye99"</span><span style="color:var(--text2);">)</span>
+          <span style="margin-left:auto;color:var(--primary);">↗</span>
+        </a>
+        <a data-ripple href="https://leetcode.com/u/mR1Ju2yJLu/" target="_blank" rel="noopener" style="position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-decoration:none;color:var(--text);transition:border-color .2s,transform .18s var(--ease);">
+          <span style="color:var(--primary);font-weight:600;">leetcode</span><span style="color:var(--text2);">.solve(</span><span style="color:var(--ok);">"mR1Ju2yJLu"</span><span style="color:var(--text2);">)</span>
+          <span style="margin-left:auto;color:var(--primary);">↗</span>
+        </a>
+      </div>
+
+      <div data-reveal style="text-align:left;border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-size:12.5px;">
+          <span style="color:var(--ok);font-weight:700;">POST</span>
+          <span style="color:var(--text2);">/api/v1/messages</span>
+          <span style="margin-left:auto;color:var(--text2);">Content-Type: application/json</span>
+        </div>
+        <div style="padding:22px 24px;font-family:'Fira Code',monospace;font-size:14px;line-height:2.1;color:var(--text);">
+          <div style="color:var(--text2);">{</div>
+          <div style="padding-left:22px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
+            <span style="color:var(--primary);">"name"</span><span style="color:var(--text2);">:</span>
+            <input data-field placeholder="Ada Lovelace" style="flex:1;min-width:160px;background:transparent;border:none;border-bottom:1px dashed var(--border);color:var(--ok);font-family:inherit;font-size:14px;padding:2px 4px;outline:none;">
+            <span style="color:var(--text2);">,</span>
+          </div>
+          <div style="padding-left:22px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
+            <span style="color:var(--primary);">"email"</span><span style="color:var(--text2);">:</span>
+            <input data-field type="email" placeholder="ada@example.com" style="flex:1;min-width:160px;background:transparent;border:none;border-bottom:1px dashed var(--border);color:var(--ok);font-family:inherit;font-size:14px;padding:2px 4px;outline:none;">
+            <span style="color:var(--text2);">,</span>
+          </div>
+          <div style="padding-left:22px;display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+            <span style="color:var(--primary);">"message"</span><span style="color:var(--text2);">:</span>
+            <textarea data-field rows="2" placeholder="Tell me about the system you're building..." style="flex:1;min-width:200px;resize:vertical;background:transparent;border:none;border-bottom:1px dashed var(--border);color:var(--ok);font-family:inherit;font-size:14px;padding:2px 4px;outline:none;"></textarea>
+          </div>
+          <div style="color:var(--text2);">}</div>
+          <div style="margin-top:18px;display:flex;justify-content:flex-end;">
+            <button data-send style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13.5px;color:#fff;background:var(--primary);padding:12px 22px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 8px 26px -10px var(--glow);transition:transform .18s var(--ease);">
+              Send request <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="position:relative;z-index:2;border-top:1px solid var(--border);background:var(--surface);overflow:hidden;">
+    <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,var(--grid) 2px 3px);opacity:.5;"></div>
+    <div style="position:relative;max-width:var(--maxw);margin:0 auto;padding:26px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text2);">© 2025 Eugene Anokye <span style="color:var(--border);">·</span> built with precision</div>
+      <div style="display:flex;align-items:center;gap:18px;font-family:'JetBrains Mono',monospace;font-size:13px;">
+        <a href="https://github.com/eugeneanokye99" target="_blank" rel="noopener" style="color:var(--text2);text-decoration:none;transition:color .15s;">github</a>
+        <a href="https://www.linkedin.com/in/eugene-anokye" target="_blank" rel="noopener" style="color:var(--text2);text-decoration:none;transition:color .15s;">linkedin</a>
+        <a href="https://leetcode.com/u/mR1Ju2yJLu/" target="_blank" rel="noopener" style="color:var(--text2);text-decoration:none;transition:color .15s;">leetcode</a>
+        <a href="#hero" style="color:var(--primary);text-decoration:none;">↑ top</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ BOOT SCREEN ============ -->
+  <div ref="{{ bootRef }}" style="position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .6s var(--ease);">
+    <div style="width:min(560px,86vw);font-family:'Fira Code',monospace;font-size:14px;line-height:2;color:var(--text);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:18px;color:var(--primary);">
+        <span style="display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border:1.5px solid var(--primary);border-radius:8px;box-shadow:0 0 22px -4px var(--glow);">~</span>
+        portfolio_os
+      </div>
+      <div ref="{{ bootLogRef }}" style="color:var(--text2);min-height:160px;"></div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { theme: 'dark' };
+
+  constructor(props){
+    super(props);
+    this.rootRef = React.createRef();
+    this.rainRef = React.createRef();
+    this.gridRef = React.createRef();
+    this.cursorRef = React.createRef();
+    this.heroRef = React.createRef();
+    this.roleRef = React.createRef();
+    this.termRef = React.createRef();
+    this.bootRef = React.createRef();
+    this.bootLogRef = React.createRef();
+    this.themeIconRef = React.createRef();
+    this._timers = [];
+    this._rafs = [];
+    this._cleanup = [];
+  }
+
+  // ---------- data ----------
+  get stackData(){
+    return [
+      { key:'languages', items:[
+        { name:'Java', tag:'<Java/>', prof:95 },
+        { name:'Python', tag:'<Python/>', prof:80 },
+        { name:'JavaScript', tag:'<JS/>', prof:75 },
+        { name:'C', tag:'<C/>', prof:65 },
+      ]},
+      { key:'frameworks', items:[
+        { name:'Spring Boot', tag:'@SpringBoot', prof:95 },
+        { name:'Spring Security', tag:'@Security', prof:88 },
+        { name:'Hibernate / JPA', tag:'@JPA', prof:85 },
+      ]},
+      { key:'databases', items:[
+        { name:'PostgreSQL', tag:'psql', prof:88 },
+        { name:'MySQL', tag:'mysql', prof:85 },
+      ]},
+      { key:'devops_tools', items:[
+        { name:'Docker', tag:'docker', prof:82 },
+        { name:'Postman', tag:'postman', prof:90 },
+        { name:'Git', tag:'git', prof:92 },
+        { name:'GitHub', tag:'gh', prof:92 },
+      ]},
+    ];
+  }
+  get projectsData(){
+    return [
+      { name:'ShiftSync', desc:'Multi-location workforce scheduling platform with conflict-aware shift allocation.', tags:[['Java','java'],['Scheduling','svc'],['REST','get']] },
+      { name:'spring-data-ecommerce', desc:'Enterprise e-commerce backend — REST + GraphQL APIs, AOP cross-cutting concerns.', tags:[['Spring Boot','java'],['GraphQL','post'],['AOP','svc']] },
+      { name:'spring-security-ecommerce', desc:'Hardened commerce service with JWT auth, OAuth2 flows and role-based access control.', tags:[['JWT','post'],['OAuth2','svc'],['RBAC','get']] },
+      { name:'UrbanVital', desc:'Clinical operations platform coordinating patient, staff and resource workflows.', tags:[['Java','java'],['Domain','svc'],['REST','get']] },
+      { name:'Zap Sync', desc:'Modern peer-to-peer file sharing platform built for fast, direct transfers.', tags:[['Java','java'],['P2P','post'],['Sockets','svc']] },
+    ];
+  }
+  get statsData(){
+    return [
+      { value:44, label:'Repositories', prefix:'', mono:'repos' },
+      { value:3, label:'Pull Shark', prefix:'×', mono:'badge' },
+      { value:null, label:'Pair Extraordinaire', text:'★', mono:'badge' },
+      { value:null, label:'Active on LeetCode', text:'●', mono:'streak' },
+    ];
+  }
+
+  // ---------- lifecycle ----------
+  componentDidMount(){
+    this.applyTheme(this.state.theme);
+    this.buildStack();
+    this.buildProjects();
+    this.buildStats();
+    this.buildGraph();
+    this.runBoot();
+    this.initCursor();
+    this.initRoleTyper();
+    this.initReveals();
+    this.initHero();
+    this.initRain();
+    this.initParallax();
+    this.initRipples();
+    this.initMagnets();
+    this.initSend();
+    this.initScrollSpy();
+  }
+  componentWillUnmount(){
+    this._timers.forEach(clearTimeout);
+    this._rafs.forEach(cancelAnimationFrame);
+    this._cleanup.forEach(fn=>{ try{ fn(); }catch(e){} });
+  }
+  later(fn,ms){ const t=setTimeout(fn,ms); this._timers.push(t); return t; }
+
+  renderVals(){
+    return {
+      rootRef:this.rootRef, rainRef:this.rainRef, gridRef:this.gridRef,
+      cursorRef:this.cursorRef, heroRef:this.heroRef, roleRef:this.roleRef,
+      termRef:this.termRef, bootRef:this.bootRef, bootLogRef:this.bootLogRef,
+      themeIconRef:this.themeIconRef,
+      toggleTheme:this.toggleTheme,
+    };
+  }
+
+  // ---------- theme ----------
+  applyTheme(t){
+    document.documentElement.setAttribute('data-theme', t);
+    if(this.themeIconRef.current) this.themeIconRef.current.textContent = t==='dark' ? '☾' : '☀';
+    this.primary = t==='dark' ? '#000beb' : '#0109a2';
+  }
+  toggleTheme = () => {
+    const next = this.state.theme==='dark' ? 'light' : 'dark';
+    const btn = this.themeIconRef.current && this.themeIconRef.current.parentElement;
+    if(btn){ btn.style.transform='rotate(180deg)'; this.later(()=>{ btn.style.transform='rotate(0deg)'; },400); }
+    this.setState({ theme: next });
+    this.applyTheme(next);
+    // Force-finalize the page background: some embedded environments freeze the
+    // background-color transition at its start frame, leaving the page dark.
+    [this.rootRef.current, document.body, document.documentElement].forEach(el=>{
+      if(!el) return;
+      const prev = el.style.transition;
+      el.style.transition='none';
+      void el.offsetHeight; // reflow → snap to the new var(--bg)
+      // restore on the next tick so future toggles keep the smooth fade in real browsers
+      this.later(()=>{ el.style.transition = prev; }, 60);
+    });
+  };
+
+  // ---------- boot ----------
+  runBoot(){
+    const lines = [
+      ['> booting portfolio_os v2.4 ...',''],
+      ['> loading spring-context .........','[ ok ]'],
+      ['> initializing datasource ........','[ ok ]'],
+      ['> wiring dependency graph ........','[ ok ]'],
+      ['> mounting components ............','[ ok ]'],
+      ['> system ready. welcome.',''],
+    ];
+    const log = this.bootLogRef.current;
+    const dismiss=()=>{
+      const b=this.bootRef.current;
+      if(b){ b.style.pointerEvents='none'; b.style.opacity='0'; this.later(()=>{ if(b) b.style.display='none'; },700); }
+    };
+    if(!log){ dismiss(); return; }
+    lines.forEach((ln,idx)=>{
+      this.later(()=>{
+        const [txt,ok]=ln;
+        const row=document.createElement('div');
+        row.innerHTML = txt+(ok?(' <span style="color:var(--ok);">'+ok+'</span>'):'');
+        log.appendChild(row);
+      }, 260 + idx*230);
+    });
+    // independent teardown — never depends on the print loop completing
+    this.later(dismiss, 260 + lines.length*230 + 380);
+  }
+
+  // ---------- cursor ----------
+  initCursor(){
+    const dot=this.cursorRef.current; if(!dot) return;
+    if(window.matchMedia && window.matchMedia('(hover:none)').matches){ dot.style.display='none'; return; }
+    let mx=window.innerWidth/2, my=window.innerHeight/2, cx=mx, cy=my;
+    const move=e=>{ mx=e.clientX; my=e.clientY; };
+    const over=e=>{
+      const t=e.target;
+      const interactive = t.closest && t.closest('a,button,input,textarea,[data-cat-head]');
+      if(interactive){ dot.style.width='44px'; dot.style.height='44px'; dot.style.backgroundColor='var(--tint)'; }
+      else { dot.style.width='26px'; dot.style.height='26px'; dot.style.backgroundColor='transparent'; }
+    };
+    window.addEventListener('mousemove',move);
+    window.addEventListener('mouseover',over);
+    const loop=()=>{ cx+=(mx-cx)*.18; cy+=(my-cy)*.18; dot.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)'; this._rafs.push(requestAnimationFrame(loop)); };
+    loop();
+    this._cleanup.push(()=>{ window.removeEventListener('mousemove',move); window.removeEventListener('mouseover',over); });
+  }
+
+  // ---------- role typer ----------
+  initRoleTyper(){
+    const el=this.roleRef.current; if(!el) return;
+    const roles=['Backend Engineer','Java Developer','Spring Boot','Systems Builder','Distributed Systems'];
+    let r=0, c=0, deleting=false;
+    const tick=()=>{
+      const word=roles[r];
+      c += deleting?-1:1;
+      el.textContent = word.slice(0,c);
+      let d = deleting?45:85;
+      if(!deleting && c===word.length){ d=1500; deleting=true; }
+      else if(deleting && c===0){ deleting=false; r=(r+1)%roles.length; d=350; }
+      this.later(tick,d);
+    };
+    tick();
+  }
+
+  // ---------- terminal bio ----------
+  runTerminal(){
+    const el=this.termRef.current; if(!el || el.dataset.ran) return; el.dataset.ran='1';
+    const lines=[
+      { p:'$', t:' ./bio.sh', c:'var(--primary)' },
+      { p:'>', t:' name: Eugene Anokye' },
+      { p:'>', t:' role: Backend Engineer' },
+      { p:'>', t:' location: Ghana 🇬🇭' },
+      { p:'>', t:' org: Amali-Tech' },
+      { p:'>', t:' focus: Java, Spring Boot, Microservices' },
+      { p:'>', t:' interests: System Design, Clean Architecture' },
+      { p:'>', t:' leetcode: Active', c:'var(--ok)' },
+      { p:'$', t:' _', cursor:true, c:'var(--primary)' },
+    ];
+    let i=0;
+    const add=()=>{
+      if(i>=lines.length) return;
+      const l=lines[i];
+      const row=document.createElement('div');
+      row.style.opacity='0'; row.style.transition='opacity .3s';
+      const label = l.p==='$' ? '<span style="color:var(--primary);">$</span>' : '<span style="color:var(--text2);">&gt;</span>';
+      row.innerHTML = label + '<span style="color:'+(l.c||'var(--text)')+';">'+l.t.replace('_', l.cursor?'<span style="background:var(--primary);color:transparent;animation:blink 1s step-end infinite;">_</span>':'_')+'</span>';
+      el.appendChild(row);
+      requestAnimationFrame(()=>{ row.style.opacity='1'; });
+      i++;
+      this.later(add, l.p==='$'?420:200);
+    };
+    add();
+  }
+
+  // ---------- build: stack ----------
+  buildStack(){
+    const grid=this.q('[data-stack-grid]'); if(!grid) return;
+    this.stackData.forEach(cat=>{
+      const block=document.createElement('div');
+      block.setAttribute('data-reveal','');
+      block.setAttribute('data-cat-block','');
+      block.style.cssText='border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;';
+      const head=document.createElement('button');
+      head.setAttribute('data-cat-head','');
+      head.style.cssText='width:100%;display:flex;align-items:center;gap:10px;padding:16px 20px;background:var(--surface-2);border:none;border-bottom:1px solid var(--border);cursor:pointer;font-family:\'JetBrains Mono\',monospace;font-size:14px;color:var(--text);text-align:left;';
+      head.innerHTML='<span style="color:var(--text2);">{</span> <span style="color:var(--primary);">"'+cat.key+'"</span><span style="color:var(--text2);">: [</span><span data-chev style="margin-left:auto;color:var(--text2);transition:transform .25s var(--ease);">▾</span>';
+      const panel=document.createElement('div');
+      panel.setAttribute('data-cat-panel','');
+      panel.style.cssText='padding:8px 20px 18px;display:grid;gap:6px;transition:max-height .4s var(--ease),opacity .3s;overflow:hidden;';
+      cat.items.forEach(it=>{
+        const row=document.createElement('div');
+        row.style.cssText='padding:12px 4px;border-radius:8px;transition:background-color .15s;';
+        row.innerHTML=
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;">'
+          +'<span style="font-family:\'Inter\',sans-serif;font-weight:600;font-size:14.5px;color:var(--text);">'+it.name+'</span>'
+          +'<span style="font-family:\'Fira Code\',monospace;font-size:12px;color:var(--code);background:var(--tint);padding:3px 9px;border-radius:5px;">'+this.esc(it.tag)+'</span>'
+          +'</div>'
+          +'<div style="position:relative;height:7px;border-radius:99px;background:var(--tint);overflow:hidden;">'
+          +'<div data-bar="'+it.prof+'" style="position:absolute;inset:0 100% 0 0;background:var(--primary);border-radius:99px;transition:right 1.1s var(--ease);box-shadow:0 0 12px -2px var(--glow);"></div>'
+          +'</div>';
+        row.addEventListener('mouseenter',()=>{ row.style.background='var(--tint)'; });
+        row.addEventListener('mouseleave',()=>{ row.style.background='transparent'; });
+        panel.appendChild(row);
+      });
+      const close=document.createElement('div');
+      close.style.cssText='padding:0 20px 16px;font-family:\'JetBrains Mono\',monospace;font-size:14px;color:var(--text2);';
+      close.textContent='] }';
+      head.addEventListener('click',()=>{
+        const open = panel.style.maxHeight!=='0px';
+        const chev=head.querySelector('[data-chev]');
+        if(open){ panel.style.maxHeight='0px'; panel.style.opacity='0'; panel.style.paddingTop='0'; panel.style.paddingBottom='0'; close.style.display='none'; if(chev) chev.style.transform='rotate(-90deg)'; }
+        else { panel.style.maxHeight=panel.scrollHeight+40+'px'; panel.style.opacity='1'; panel.style.paddingTop='8px'; panel.style.paddingBottom='18px'; close.style.display='block'; if(chev) chev.style.transform='rotate(0)'; }
+      });
+      block.appendChild(head); block.appendChild(panel); block.appendChild(close);
+      grid.appendChild(block);
+    });
+  }
+
+  // ---------- build: projects ----------
+  buildProjects(){
+    const grid=this.q('[data-projects]'); if(!grid) return;
+    const methodColors={ get:'var(--ok)', post:'var(--warn)', svc:'var(--primary)', java:'var(--code)' };
+    this.projectsData.forEach((p,idx)=>{
+      const card=document.createElement('div');
+      card.setAttribute('data-reveal','');
+      card.dataset.rest='transform .25s var(--ease),box-shadow .3s,border-color .2s';
+      card.style.cssText='position:relative;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:22px 22px 20px;display:flex;flex-direction:column;gap:14px;transition:transform .25s var(--ease),box-shadow .3s,border-color .2s;overflow:hidden;';
+      // traced border svg
+      const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('aria-hidden','true');
+      svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .2s;';
+      const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rect.setAttribute('x','1'); rect.setAttribute('y','1'); rect.setAttribute('rx','11');
+      rect.setAttribute('width','calc(100% - 2px)'); rect.setAttribute('height','calc(100% - 2px)');
+      rect.setAttribute('fill','none'); rect.setAttribute('stroke','var(--primary)'); rect.setAttribute('stroke-width','1.5');
+      rect.setAttribute('stroke-dasharray','8 6');
+      svg.appendChild(rect); card.appendChild(svg);
+
+      const top=document.createElement('div');
+      top.style.cssText='display:flex;align-items:flex-start;justify-content:space-between;gap:10px;';
+      top.innerHTML='<div style="display:flex;align-items:center;gap:9px;"><span style="color:var(--primary);font-family:\'JetBrains Mono\',monospace;font-size:13px;">›</span><span style="font-family:\'JetBrains Mono\',monospace;font-weight:700;font-size:16px;color:var(--text);">'+p.name+'</span></div>'
+        +'<a href="https://github.com/eugeneanokye99" target="_blank" rel="noopener" data-gh style="color:var(--text2);text-decoration:none;font-size:17px;transition:color .15s,transform .2s;">↗</a>';
+      const desc=document.createElement('p');
+      desc.style.cssText='margin:0;font-size:14px;line-height:1.6;color:var(--text2);flex:1;';
+      desc.textContent=p.desc;
+      const tags=document.createElement('div');
+      tags.style.cssText='display:flex;flex-wrap:wrap;gap:7px;';
+      p.tags.forEach(([t,m])=>{
+        const b=document.createElement('span');
+        const col=methodColors[m]||'var(--primary)';
+        b.style.cssText='font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:600;letter-spacing:.02em;color:'+col+';background:color-mix(in srgb,'+col+' 12%,transparent);border:1px solid color-mix(in srgb,'+col+' 30%,transparent);padding:4px 9px;border-radius:6px;';
+        b.textContent=t;
+        tags.appendChild(b);
+      });
+      card.appendChild(top); card.appendChild(desc); card.appendChild(tags);
+
+      card.addEventListener('mouseenter',()=>{
+        card.style.transform='translateY(-6px)';
+        card.style.boxShadow='0 24px 50px -22px var(--glow)';
+        card.style.borderColor='var(--primary)';
+        svg.style.opacity='1';
+        const len=rect.getTotalLength ? rect.getTotalLength() : 1000;
+        rect.style.strokeDasharray=len; rect.style.strokeDashoffset=len;
+        rect.style.animation='none'; void rect.getBBox;
+        rect.style.animation='dashRun 1.1s var(--ease) forwards';
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transform='translateY(0)';
+        card.style.boxShadow='none';
+        card.style.borderColor='var(--border)';
+        svg.style.opacity='0';
+        rect.style.animation='none'; rect.style.strokeDasharray='8 6'; rect.style.strokeDashoffset='0';
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ---------- build: stats ----------
+  buildStats(){
+    const wrap=this.q('[data-stats]'); if(!wrap) return;
+    this.statsData.forEach(s=>{
+      const card=document.createElement('div');
+      card.setAttribute('data-reveal','');
+      card.dataset.rest='transform .25s var(--ease),border-color .2s,box-shadow .3s';
+      card.style.cssText='border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:22px 20px;transition:transform .25s var(--ease),border-color .2s,box-shadow .3s;';
+      const valHtml = s.value!=null
+        ? '<span data-count="'+s.value+'" data-prefix="'+(s.prefix||'')+'">'+(s.prefix||'')+'0</span>'
+        : '<span style="color:var(--primary);">'+s.text+'</span>';
+      card.innerHTML='<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text2);margin-bottom:12px;">// '+s.mono+'</div>'
+        +'<div style="font-family:\'JetBrains Mono\',monospace;font-weight:800;font-size:38px;letter-spacing:-.03em;color:var(--text);line-height:1;margin-bottom:8px;">'+valHtml+'</div>'
+        +'<div style="font-size:13.5px;color:var(--text2);">'+s.label+'</div>';
+      card.addEventListener('mouseenter',()=>{ card.style.transform='translateY(-4px)'; card.style.borderColor='var(--primary)'; card.style.boxShadow='0 18px 40px -24px var(--glow)'; });
+      card.addEventListener('mouseleave',()=>{ card.style.transform='translateY(0)'; card.style.borderColor='var(--border)'; card.style.boxShadow='none'; });
+      wrap.appendChild(card);
+    });
+  }
+
+  // ---------- build: contribution graph ----------
+  buildGraph(){
+    const graph=this.q('[data-graph]'); if(!graph) return;
+    const weeks=52, days=7;
+    const levels=['var(--tint)','color-mix(in srgb,var(--primary) 30%,transparent)','color-mix(in srgb,var(--primary) 55%,transparent)','color-mix(in srgb,var(--primary) 78%,transparent)','var(--primary)'];
+    for(let w=0; w<weeks; w++){
+      const col=document.createElement('div');
+      col.style.cssText='display:flex;flex-direction:column;gap:3px;';
+      for(let d=0; d<days; d++){
+        const r=Math.random();
+        let lvl = r>.82?4 : r>.68?3 : r>.5?2 : r>.3?1 : 0;
+        const cell=document.createElement('div');
+        cell.style.cssText='width:11px;height:11px;border-radius:2.5px;background:'+levels[lvl]+';opacity:0;transform:scale(.4);transition:opacity .3s,transform .3s;';
+        cell.dataset.delay=(w*4+d*1.2)+'';
+        if(lvl===4) cell.style.boxShadow='0 0 7px -1px var(--glow)';
+        col.appendChild(cell);
+      }
+      graph.appendChild(col);
+    }
+    // legend
+    const legend=this.q('[data-legend]');
+    if(legend){ levels.forEach(c=>{ const s=document.createElement('span'); s.style.cssText='width:10px;height:10px;border-radius:2px;background:'+c+';'; legend.appendChild(s); }); }
+  }
+
+  // ---------- hero canvas: node graph ----------
+  initHero(){
+    const cv=this.heroRef.current; if(!cv) return;
+    const ctx=cv.getContext('2d');
+    let W,H,dpr;
+    const resize=()=>{
+      dpr=Math.min(window.devicePixelRatio||1,2);
+      W=cv.clientWidth; H=cv.clientHeight;
+      cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    };
+    resize();
+    window.addEventListener('resize',resize);
+    // layered nodes: client -> gateway -> services -> db
+    const cols=[
+      [{x:.10,y:.5,l:'client'}],
+      [{x:.34,y:.5,l:'gateway'}],
+      [{x:.62,y:.24,l:'auth'},{x:.62,y:.5,l:'orders'},{x:.62,y:.76,l:'catalog'}],
+      [{x:.88,y:.34,l:'db'},{x:.88,y:.66,l:'cache'}],
+    ];
+    const nodes=[]; cols.forEach((c,ci)=>c.forEach(n=>nodes.push({...n,ci})));
+    const edges=[];
+    for(let ci=0; ci<cols.length-1; ci++){
+      cols[ci].forEach(a=>cols[ci+1].forEach(b=>edges.push({a,b,off:Math.random()})));
+    }
+    let t=0;
+    const draw=()=>{
+      ctx.clearRect(0,0,W,H);
+      const P=this.primary;
+      // edges
+      edges.forEach(e=>{
+        const ax=e.a.x*W, ay=e.a.y*H, bx=e.b.x*W, by=e.b.y*H;
+        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by);
+        ctx.strokeStyle='rgba(120,130,210,0.18)'; ctx.lineWidth=1; ctx.stroke();
+        // pulse
+        const prog=((t*0.006)+e.off)%1;
+        const px=ax+(bx-ax)*prog, py=ay+(by-ay)*prog;
+        ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2);
+        ctx.fillStyle=P; ctx.shadowColor=P; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
+      });
+      // nodes
+      nodes.forEach(n=>{
+        const x=n.x*W, y=n.y*H;
+        const pulse=1+Math.sin(t*0.04+n.x*10)*0.12;
+        ctx.beginPath(); ctx.arc(x,y,7*pulse,0,Math.PI*2);
+        ctx.fillStyle=P; ctx.shadowColor=P; ctx.shadowBlur=18; ctx.fill(); ctx.shadowBlur=0;
+        ctx.beginPath(); ctx.arc(x,y,13,0,Math.PI*2);
+        ctx.strokeStyle='rgba(120,130,210,0.30)'; ctx.lineWidth=1; ctx.stroke();
+        ctx.font='10px "JetBrains Mono", monospace'; ctx.fillStyle='rgba(136,144,204,0.85)';
+        ctx.textAlign='center'; ctx.fillText(n.l, x, y+26);
+      });
+      t++;
+      this._rafs.push(requestAnimationFrame(draw));
+    };
+    draw();
+    this._cleanup.push(()=>window.removeEventListener('resize',resize));
+  }
+
+  // ---------- code rain ----------
+  initRain(){
+    const cv=this.rainRef.current; if(!cv) return;
+    const ctx=cv.getContext('2d');
+    let W,H;
+    const words=['Java','@Service','Spring','public','class','void','final','REST','JPA','@Bean','try','catch','POST','GET','null','int','String','@Override','docker','SELECT','JWT','OAuth2','async','@Entity'];
+    let cols=[];
+    const resize=()=>{
+      W=cv.width=window.innerWidth; H=cv.height=window.innerHeight;
+      const n=Math.floor(W/90);
+      cols=Array.from({length:n},(_, i)=>({ x:(i+0.5)*(W/n), y:Math.random()*H, sp:0.5+Math.random()*0.9, w:words[Math.floor(Math.random()*words.length)] }));
+    };
+    resize();
+    window.addEventListener('resize',resize);
+    let frame=0;
+    const draw=()=>{
+      frame++;
+      if(frame%2===0){
+        ctx.clearRect(0,0,W,H);
+        ctx.font='12px "Fira Code", monospace';
+        ctx.fillStyle=this.primary;
+        cols.forEach(c=>{
+          ctx.fillText(c.w, c.x, c.y);
+          c.y+=c.sp;
+          if(c.y>H+20){ c.y=-20; c.w=words[Math.floor(Math.random()*words.length)]; c.x=Math.random()*W; }
+        });
+      }
+      this._rafs.push(requestAnimationFrame(draw));
+    };
+    draw();
+    this._cleanup.push(()=>window.removeEventListener('resize',resize));
+  }
+
+  // ---------- parallax grid ----------
+  initParallax(){
+    const grid=this.gridRef.current; if(!grid) return;
+    const move=e=>{
+      const dx=(e.clientX/window.innerWidth-0.5)*-22;
+      const dy=(e.clientY/window.innerHeight-0.5)*-22;
+      grid.style.transform='translate('+dx+'px,'+dy+'px)';
+    };
+    window.addEventListener('mousemove',move);
+    this._cleanup.push(()=>window.removeEventListener('mousemove',move));
+  }
+
+  // ---------- reveals + bars + counts + terminal + cells ----------
+  revealEl(el){
+    if(el.dataset.revealed) return; el.dataset.revealed='1';
+    el.style.opacity='1'; el.style.transform='none';
+    el.querySelectorAll('[data-bar]').forEach((b,i)=>{ this.later(()=>{ b.style.right=(100-parseInt(b.dataset.bar))+'%'; }, 120+i*90); });
+    el.querySelectorAll('[data-count]').forEach(c=>this.animateCount(c));
+    el.querySelectorAll('[data-delay]').forEach(c=>{ this.later(()=>{ c.style.opacity='1'; c.style.transform='scale(1)'; }, parseFloat(c.dataset.delay)); });
+    if(this.termRef.current && (el.contains(this.termRef.current) || el===this.termRef.current.closest('[data-reveal]'))) this.runTerminal();
+    // Force-finalize: some embedded/throttled environments freeze CSS transitions
+    // at their start frame, so we strip the reveal transition and re-assert the
+    // end state once the animation should be done — content can never stay hidden.
+    this.later(()=>{
+      el.style.transition = el.dataset.rest || 'none';
+      el.style.opacity='1'; el.style.transform='none';
+      el.querySelectorAll('[data-delay]').forEach(c=>{ c.style.transition='none'; c.style.opacity='1'; c.style.transform='scale(1)'; });
+    }, 950);
+    this.later(()=>{
+      el.querySelectorAll('[data-bar]').forEach(b=>{ b.style.transition='none'; b.style.right=(100-parseInt(b.dataset.bar))+'%'; });
+    }, 1700);
+  }
+  initReveals(){
+    const root=this.rootRef.current; if(!root) return;
+    const els=[...root.querySelectorAll('[data-reveal]')];
+    els.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(28px)'; el.style.transition='opacity .7s var(--ease), transform .7s var(--ease)'; });
+    const vh=()=> window.innerHeight || document.documentElement.clientHeight;
+    const check=()=>{
+      let remaining=0;
+      els.forEach(el=>{
+        if(el.dataset.revealed) return;
+        const r=el.getBoundingClientRect();
+        if(r.top < vh()*0.88 && r.bottom > 0){ this.revealEl(el); } else { remaining++; }
+      });
+      return remaining;
+    };
+    // reveal whatever is in view on mount
+    check();
+    // scroll/resize listeners on every plausible scroll source
+    const onScroll=()=>{ if(check()===0) detach(); };
+    const targets=[window, document, document.body, document.scrollingElement, root].filter(Boolean);
+    targets.forEach(t=>t.addEventListener('scroll', onScroll, { passive:true }));
+    window.addEventListener('resize', onScroll, { passive:true });
+    const detach=()=>{ targets.forEach(t=>t.removeEventListener('scroll', onScroll)); window.removeEventListener('resize', onScroll); };
+    // IntersectionObserver (works in real browsers; harmless if it never fires)
+    let io=null;
+    try{
+      io=new IntersectionObserver((entries)=>{ entries.forEach(en=>{ if(en.isIntersecting){ this.revealEl(en.target); io.unobserve(en.target); } }); },{ threshold:.15 });
+      els.forEach(el=>{ if(!el.dataset.revealed) io.observe(el); });
+    }catch(e){}
+    // safety net: nothing stays invisible even if scroll/observer never fire
+    this.later(()=>{ check(); }, 900);
+    this.later(()=>{ els.forEach(el=>this.revealEl(el)); }, 2600);
+    this._cleanup.push(()=>{ detach(); if(io) io.disconnect(); });
+  }
+  animateCount(el){
+    if(el.dataset.counted) return; el.dataset.counted='1';
+    const target=parseInt(el.dataset.count), prefix=el.dataset.prefix||'';
+    const steps=34, dur=1300, t0=Date.now();
+    const tick=()=>{
+      const p=Math.min((Date.now()-t0)/dur,1);
+      const eased=1-Math.pow(1-p,3);
+      el.textContent=prefix+Math.round(eased*target);
+      if(p<1) this.later(tick, dur/steps);
+      else el.textContent=prefix+target;
+    };
+    tick();
+  }
+
+  // ---------- ripple links ----------
+  initRipples(){
+    const root=this.rootRef.current; if(!root) return;
+    root.querySelectorAll('[data-ripple]').forEach(a=>{
+      a.addEventListener('mouseenter',()=>{ a.style.borderColor='var(--primary)'; a.style.transform='translateX(4px)'; });
+      a.addEventListener('mouseleave',()=>{ a.style.borderColor='var(--border)'; a.style.transform='translateX(0)'; });
+      a.addEventListener('click',e=>{
+        const r=document.createElement('span');
+        const rect=a.getBoundingClientRect();
+        const size=Math.max(rect.width,rect.height);
+        r.style.cssText='position:absolute;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;width:'+size+'px;height:'+size+'px;border-radius:50%;background:var(--tint);transform:scale(0);animation:ringPulse .7s var(--ease) forwards;pointer-events:none;';
+        a.appendChild(r); this.later(()=>r.remove(),720);
+      });
+    });
+  }
+  // ---------- magnetic buttons ----------
+  initMagnets(){
+    const root=this.rootRef.current; if(!root) return;
+    root.querySelectorAll('[data-magnet]').forEach(b=>{
+      b.addEventListener('mousemove',e=>{ const r=b.getBoundingClientRect(); const dx=(e.clientX-r.left-r.width/2)*.18; const dy=(e.clientY-r.top-r.height/2)*.28; b.style.transform='translate('+dx+'px,'+dy+'px)'; });
+      b.addEventListener('mouseleave',()=>{ b.style.transform='translate(0,0)'; });
+    });
+  }
+  // ---------- contact send ----------
+  initSend(){
+    const root=this.rootRef.current; if(!root) return;
+    const btn=root.querySelector('[data-send]'); if(!btn) return;
+    btn.addEventListener('click',()=>{
+      const orig=btn.innerHTML;
+      btn.innerHTML='<span style="display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></span> sending...';
+      this.later(()=>{ btn.innerHTML='✓ 201 Created'; btn.style.background='var(--ok)'; },1100);
+      this.later(()=>{ btn.innerHTML=orig; btn.style.background='var(--primary)'; },3000);
+    });
+  }
+  // ---------- scrollspy ----------
+  initScrollSpy(){
+    const root=this.rootRef.current; if(!root) return;
+    const links=[...root.querySelectorAll('[data-navlink]')];
+    const map={}; links.forEach(l=>map[l.getAttribute('href').slice(1)]=l);
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting){ links.forEach(l=>{ l.style.color='var(--text2)'; l.style.background='transparent'; }); const a=map[en.target.id]; if(a){ a.style.color='var(--primary)'; a.style.background='var(--tint)'; } } });
+    },{ rootMargin:'-45% 0px -50% 0px' });
+    ['about','stack','projects','activity','contact'].forEach(id=>{ const s=document.getElementById(id); if(s) io.observe(s); });
+    this._cleanup.push(()=>io.disconnect());
+  }
+
+  // ---------- helpers ----------
+  q(sel){ return this.rootRef.current ? this.rootRef.current.querySelector(sel) : null; }
+  esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+}
+</script>
+</body>
+</html>
