@@ -1,26 +1,6 @@
+/* Light is the default palette (bare :root) so the first paint — before
+   JS hydrates and sets data-theme — never flashes the dark theme. */
 :root {
-  --bg: #04040f;
-  --surface: #0a0b1e;
-  --surface-2: #0d0f26;
-  --primary: #000beb;
-  --text: #e8eaff;
-  --text2: #8890cc;
-  --border: #1a1f4a;
-  --tint: rgba(0, 11, 235, 0.12);
-  --glow: rgba(0, 11, 235, 0.55);
-  --grid: rgba(0, 11, 235, 0.1);
-  --code: #5d66c9;
-  --ok: #2bd4a0;
-  --warn: #ffb020;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --maxw: 1280px;
-
-  --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-mono: var(--font-jbmono), "JetBrains Mono", monospace;
-  --font-code: var(--font-fira), "Fira Code", monospace;
-}
-
-:root[data-theme="light"] {
   --bg: #f4f5ff;
   --surface: #ffffff;
   --surface-2: #fbfbff;
@@ -34,6 +14,28 @@
   --code: #4b53c9;
   --ok: #057a55;
   --warn: #b06b00;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --maxw: 1280px;
+
+  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-mono: var(--font-jbmono), "JetBrains Mono", monospace;
+  --font-code: var(--font-fira), "Fira Code", monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg: #04040f;
+  --surface: #0a0b1e;
+  --surface-2: #0d0f26;
+  --primary: #000beb;
+  --text: #e8eaff;
+  --text2: #8890cc;
+  --border: #1a1f4a;
+  --tint: rgba(0, 11, 235, 0.12);
+  --glow: rgba(0, 11, 235, 0.55);
+  --grid: rgba(0, 11, 235, 0.1);
+  --code: #5d66c9;
+  --ok: #2bd4a0;
+  --warn: #ffb020;
 }
 
 * {
