@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Backend engineer at Amali-Tech, Ghana. Building scalable, maintainable, production-ready systems — clean architecture, distributed services, and APIs that hold up under load.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${firaCode.variable}`}>
       <body>{children}</body>
