@@ -1,0 +1,99 @@
+:root {
+  --bg: #04040f;
+  --surface: #0a0b1e;
+  --surface-2: #0d0f26;
+  --primary: #000beb;
+  --text: #e8eaff;
+  --text2: #8890cc;
+  --border: #1a1f4a;
+  --tint: rgba(0, 11, 235, 0.12);
+  --glow: rgba(0, 11, 235, 0.55);
+  --grid: rgba(0, 11, 235, 0.1);
+  --code: #5d66c9;
+  --ok: #2bd4a0;
+  --warn: #ffb020;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --maxw: 1280px;
+
+  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-mono: var(--font-jbmono), "JetBrains Mono", monospace;
+  --font-code: var(--font-fira), "Fira Code", monospace;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f5ff;
+  --surface: #ffffff;
+  --surface-2: #fbfbff;
+  --primary: #0109a2;
+  --text: #0a0a1a;
+  --text2: #3a3a6a;
+  --border: #d0d4f7;
+  --tint: rgba(1, 9, 162, 0.07);
+  --glow: rgba(1, 9, 162, 0.18);
+  --grid: rgba(1, 9, 162, 0.08);
+  --code: #4b53c9;
+  --ok: #057a55;
+  --warn: #b06b00;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--primary);
+  color: #fff;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-120%); }
+  100% { transform: translateY(120%); }
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  80% { transform: scale(1.8); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 1px var(--border), 0 0 24px -8px var(--glow); }
+  50% { box-shadow: 0 0 0 1px var(--primary), 0 0 40px -4px var(--glow); }
+}
+
+@keyframes dashRun {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes barShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(220%); }
+}
