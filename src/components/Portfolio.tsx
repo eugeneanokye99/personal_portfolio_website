@@ -10,11 +10,14 @@ import { About } from "./About";
 import { Stack } from "./Stack";
 import { Projects } from "./Projects";
 import { Activity } from "./Activity";
+import { Blog } from "./Blog";
 import { Contact } from "./Contact";
 import { Footer } from "./Footer";
 import { BootScreen } from "./BootScreen";
+import type { Post } from "@/lib/blog";
+import type { GithubActivity } from "@/lib/github";
 
-export function Portfolio() {
+export function Portfolio({ posts, activity }: { posts: Post[]; activity: GithubActivity | null }) {
   return (
     <ThemeProvider>
       <div
@@ -37,7 +40,8 @@ export function Portfolio() {
           <About />
           <Stack />
           <Projects />
-          <Activity />
+          <Activity activity={activity} />
+          <Blog posts={posts} />
           <Contact />
         </main>
 

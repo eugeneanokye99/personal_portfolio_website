@@ -1,0 +1,23 @@
+export const metadata = {
+  title: "Migrating a Legacy System Without Breaking Trust",
+  date: "2026-02-20",
+  excerpt:
+    "Moving an old system onto a modern stack is a technical problem and a trust problem at the same time. Notes on doing both well.",
+  tags: ["Legacy Systems", "Migration", "Architecture"],
+};
+
+Every legacy system I've helped move onto a modern stack had the same underlying tension: the business needs it to keep working exactly as before, while the engineering team needs to change almost everything underneath it. Getting that balance wrong breaks more than the deploy pipeline. It breaks the trust that lets you touch the system again next quarter.
+
+## Understand why it's "legacy" before you touch it
+
+The label "legacy" gets applied to systems that are old and to systems that are badly built, as if those are the same problem. They're not. An old system with sound boundaries just needs new tooling around it. A badly built system needs its boundaries redrawn, which is a much bigger and riskier job. I spend real time reading the existing code and talking to whoever still remembers why it's shaped the way it is, before deciding which situation I'm actually in.
+
+## Migrate behind the same contract first
+
+The safest first move is almost always to reproduce the existing behavior exactly, on the new stack, behind the same interface the rest of the system already calls. Only once that's running in parallel and verified against real traffic do I start improving the internals. Changing behavior and changing infrastructure in the same step makes it impossible to tell which one caused the incident when something breaks.
+
+## Roll forward in slices the business can see
+
+A big-bang cutover puts all the risk in one weekend. Migrating one workflow at a time, and being able to show a working slice after each one, keeps stakeholders confident the project is moving rather than stuck in a black box for six months. It also means a bad slice is a bad afternoon, not a bad quarter.
+
+The technical work is the easier half. The harder half is making sure everyone downstream still trusts the system while you're rebuilding the parts they can't see.

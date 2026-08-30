@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "Testing with JUnit: The Tests I Actually Keep",
+  date: "2026-03-15",
+  excerpt:
+    "Not every test earns its place in the suite. Here's how I decide what's worth writing in JUnit and what's just noise.",
+  tags: ["Testing", "JUnit", "Java"],
+};
+
+Test coverage as a number is a trap. I've seen suites at 90% coverage that catch nothing real, and suites at 60% that catch every regression that matters. The difference is in what the tests actually assert.
+
+## Test the contract, not the implementation
+
+A test that mocks every collaborator and asserts that method A called method B is a test that breaks the moment you refactor A, even if behavior didn't change. I write JUnit tests against the public contract: given this input, what comes out, or what side effect actually happened. That style survives refactors.
+
+```java
+@Test
+void createOrder_withExistingIdempotencyKey_returnsOriginalResponse() {
+    var first = orderService.create(request, "key-123");
+    var second = orderService.create(request, "key-123");
+
+    assertThat(second).isEqualTo(first);
+    verify(orderRepository, times(1)).save(any());
+}
+```
+
+That test doesn't care how idempotency is implemented internally. It cares that calling twice with the same key doesn't create two orders. If I swap the storage mechanism next quarter, this test still tells me whether I broke something real.
+
+## Edge cases earn their place, happy paths don't need many
+
+One happy-path test per endpoint is usually enough. The tests that actually catch bugs are the edge cases: empty input, a null that shouldn't be null, a race between two requests with the same key, a downstream timeout. I spend more time thinking about which edge case is worth a test than about hitting a coverage percentage.
+
+## Integration tests over mocked unit tests, for anything that touches the database
+
+Mocking a repository layer can make a test pass while the actual SQL is broken. For anything involving a real query, I'd rather run it against a real (test) database with Testcontainers than trust a mock to reflect reality. It's slower, and it's caught bugs mocks never would have.

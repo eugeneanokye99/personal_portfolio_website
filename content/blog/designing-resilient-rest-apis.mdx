@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Designing Resilient REST APIs with Spring Boot",
+  date: "2026-06-12",
+  excerpt:
+    "Notes on the patterns I reach for when an API needs to survive retries, partial failures, and clients that don't always behave.",
+  tags: ["Spring Boot", "API Design", "Resilience"],
+};
+
+Most APIs are designed for the happy path and patched for failure later. It's cheaper, in the long run, to assume failure from the start.
+
+## Idempotency first
+
+Any endpoint that mutates state should be safe to retry. For `POST` requests that create a resource, I require an `Idempotency-Key` header and store a short-lived record of `(key, response)` pairs. A retried request with the same key returns the original response instead of creating a duplicate.
+
+```java
+@PostMapping("/orders")
+public ResponseEntity<OrderResponse> createOrder(
+    @RequestHeader("Idempotency-Key") String key,
+    @RequestBody CreateOrderRequest request
+) {
+    return idempotencyService.execute(key, () -> orderService.create(request));
+}
+```
+
+## Fail loud, fail typed
+
+A generic `500` tells the caller nothing. I model failures as a closed set of problem types and return [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807) `application/problem+json` bodies, so clients can branch on `type` instead of parsing message strings.
+
+## Timeouts are not optional
+
+Every outbound call — database, cache, downstream service — gets an explicit timeout and a circuit breaker. Without one, a single slow dependency eventually exhausts your thread pool and takes the whole service down with it.
+
+Three defaults I use almost everywhere:
+
+- Connection timeout: 1–2s
+- Read timeout: scaled to the p99 of the dependency, not a guess
+- Circuit breaker: open after a burst of failures, half-open on a short cooldown
+
+None of this is exotic. It's the difference between a service that degrades and one that falls over.

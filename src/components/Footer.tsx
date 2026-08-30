@@ -27,7 +27,7 @@ export function Footer() {
         }}
       >
         <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text2)" }}>
-          © 2025 Eugene Anokye <span style={{ color: "var(--border)" }}>·</span> built with precision
+          © 2025 Eugene Dokye Anokye <span style={{ color: "var(--border)" }}>·</span> built with precision
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 18, fontFamily: "var(--font-mono)", fontSize: 13 }}>
           <a href={socialLinks.github} target="_blank" rel="noopener" style={{ color: "var(--text2)", textDecoration: "none" }}>

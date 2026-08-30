@@ -1,0 +1,28 @@
+export const metadata = {
+  title: "Core Web Vitals: What Actually Moves the Needle",
+  date: "2026-07-20",
+  excerpt:
+    "Most Core Web Vitals advice is generic. Here's what actually moved LCP and INP on real React apps I've shipped.",
+  tags: ["Performance", "React", "Core Web Vitals"],
+};
+
+Every performance checklist tells you to lazy-load images and code-split routes. Fine advice, rarely the thing that's actually hurting your score. Here's what moved the numbers on projects I've actually shipped.
+
+## LCP: find the real blocking resource
+
+Largest Contentful Paint almost never gets fixed by "optimizing images" alone. On more than one project the real culprit was a render-blocking font import pulling from a third-party host with a slow TTFB. Swapping to a self-hosted font with `font-display: swap` did more for LCP than any image compression pass.
+
+```ts
+// next/font handles this automatically, but the principle holds
+// wherever you load fonts from: self-host, and never block first paint on it
+```
+
+## INP: audit your event handlers, not your bundle size
+
+Interaction to Next Paint punishes long tasks on the main thread, and the usual suspect is a state update that re-renders more of the tree than it needs to. A search input that re-renders an entire results grid on every keystroke will tank INP even with a tiny JS bundle. Debouncing the network call isn't enough. You have to debounce or memoize the render itself.
+
+## CLS: reserve space before data arrives
+
+Every layout shift I've hunted down traced back to the same root cause: rendering a placeholder with no fixed dimensions while data loads, then swapping in real content with different dimensions. Reserving space with a skeleton that matches the final layout's aspect ratio fixes this permanently, not just for the case you tested.
+
+The pattern across all three: the fix is rarely "add more optimization." It's usually removing one specific, identifiable bottleneck.

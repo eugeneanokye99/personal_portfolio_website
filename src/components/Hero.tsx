@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Reveal } from "./Reveal";
@@ -36,7 +37,7 @@ export function Hero() {
               boxShadow: "0 0 10px 0 var(--ok)",
             }}
           />
-          available for backend &amp; systems work
+          available for full-stack engineering work
         </div>
         <div style={{ fontFamily: "var(--font-mono)", color: "var(--primary)", fontSize: 14, marginBottom: 10 }}>
           &gt; whoami
@@ -52,7 +53,7 @@ export function Hero() {
             color: "var(--text)",
           }}
         >
-          Eugene
+          Eugene Dokye
           <br />
           Anokye<span style={{ color: "var(--primary)" }}>_</span>
         </h1>
@@ -71,9 +72,10 @@ export function Hero() {
           <RoleTypewriter />
           <span style={{ color: "var(--primary)" }}>&quot;</span>
         </div>
-        <p style={{ maxWidth: 480, fontSize: 16.5, lineHeight: 1.65, color: "var(--text2)", margin: "0 0 32px" }}>
-          Backend engineer at Amali-Tech, Ghana. I build scalable, maintainable, production-ready
-          systems — clean architecture, distributed services, and APIs that hold up under load.
+        <p style={{ maxWidth: 520, fontSize: 15.5, lineHeight: 1.7, color: "var(--text2)", margin: "0 0 32px" }}>
+          Full-stack software engineer with 5+ years shipping production systems in Spring Boot,
+          Java, React, TypeScript, Django, and Node.js. I care about clean APIs, fast interfaces,
+          and code the next engineer can actually read.
         </p>
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           <a
@@ -99,7 +101,9 @@ export function Hero() {
           </a>
           <a
             ref={downloadCvRef}
-            href="#"
+            href="https://drive.google.com/uc?export=download&id=1JMee2NFyZCkuD-dOo6QH8LSFakELbfyS"
+            target="_blank"
+            rel="noopener"
             style={{
               display: "inline-flex",
               alignItems: "center",

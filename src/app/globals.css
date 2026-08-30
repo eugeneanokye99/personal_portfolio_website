@@ -100,6 +100,16 @@ body {
   100% { transform: translateX(220%); }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ---------- layout / responsive ---------- */
 
 .section {
@@ -154,6 +164,25 @@ body {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.grid-blog {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.blog-card {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .hero-canvas {
   width: 100%;
   height: 300px;
@@ -176,7 +205,8 @@ body {
     grid-template-columns: 1fr;
   }
   .grid-projects,
-  .grid-stats {
+  .grid-stats,
+  .grid-blog {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -189,7 +219,8 @@ body {
     padding-right: 18px;
   }
   .grid-stack,
-  .grid-projects {
+  .grid-projects,
+  .grid-blog {
     grid-template-columns: 1fr;
   }
 }
@@ -198,6 +229,109 @@ body {
   .grid-stats {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------- blog / mdx typography ---------- */
+
+.prose-blog {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.prose-h1,
+.prose-h2,
+.prose-h3 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 40px 0 16px;
+}
+
+.prose-h1 { font-size: 26px; }
+.prose-h2 { font-size: 21px; }
+.prose-h3 { font-size: 17px; }
+
+.prose-blog > :first-child {
+  margin-top: 0;
+}
+
+.prose-p {
+  margin: 0 0 20px;
+  color: var(--text2);
+}
+
+.prose-a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose-list {
+  margin: 0 0 20px;
+  padding-left: 22px;
+  color: var(--text2);
+}
+
+.prose-li {
+  margin-bottom: 8px;
+}
+
+.prose-quote {
+  margin: 0 0 20px;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--primary);
+  color: var(--text2);
+  font-style: italic;
+}
+
+.prose-code {
+  font-family: var(--font-code);
+  font-size: 0.9em;
+  background: var(--tint);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.prose-pre {
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.prose-pre .prose-code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.prose-hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 36px 0;
+}
+
+.prose-table-wrap {
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+
+.prose-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.prose-table-wrap th,
+.prose-table-wrap td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
 }
 
 /* ---------- navbar responsive ---------- */

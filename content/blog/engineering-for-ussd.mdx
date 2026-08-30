@@ -1,0 +1,23 @@
+export const metadata = {
+  title: "Building a USSD App in 2026: Engineering for the Other 90%",
+  date: "2026-01-10",
+  excerpt:
+    "Not every user has a smartphone or reliable data. Building a USSD ticketing and voting app forced a different set of engineering constraints.",
+  tags: ["USSD", "Accessibility", "Systems Design"],
+};
+
+Most of my work assumes a smartphone, a browser, and reasonable connectivity. Building a USSD application for event ticketing and voting removed all three assumptions at once, and it was one of the more useful constraints I've designed against.
+
+## Every screen is a text menu with a session timeout
+
+There's no layout, no images, no client-side state. A USSD session is a stateless request-response loop over a telecom gateway, with a hard timeout measured in seconds. That forces you to think in terms of the shortest path to a decision: what's the minimum number of menu levels between "dial the code" and "vote cast," because every extra level is a chance for the session to time out and the user to lose their place entirely.
+
+## The server has to hold the conversation, not the phone
+
+Since USSD carries no client-side state between requests, the backend has to track exactly where a session is in the flow and what's already been entered, keyed by session ID. Get that session model wrong and you get users stuck in a menu loop or, worse, a vote recorded against the wrong session.
+
+## Reliability matters more than features
+
+A USSD app that's occasionally slow to render is invisible to nobody, because there's nothing to render. A USSD app that drops sessions under load is immediately, visibly broken for someone standing at a polling booth or trying to buy a ticket before an event sells out. That reordered my priorities: uptime and session integrity came before any feature that would have been a nice-to-have on a web app.
+
+Working within these constraints was a good reminder that "engineering for scale" doesn't always mean engineering for traffic. Sometimes it means engineering for the users your default assumptions quietly leave out.

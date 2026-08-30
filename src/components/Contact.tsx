@@ -5,15 +5,39 @@ import { Reveal } from "./Reveal";
 import { RippleLink } from "./RippleLink";
 import { socialLinks } from "@/lib/data";
 
-type SendState = "idle" | "sending" | "sent";
+type SendState = "idle" | "sending" | "sent" | "error";
+
+const BASIN_ENDPOINT = "https://usebasin.com/f/feaa47e63a09";
 
 export function Contact() {
   const [sendState, setSendState] = useState<SendState>("idle");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleSend = () => {
+  const canSend = name.trim() && email.trim() && message.trim() && sendState === "idle";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSend) return;
+
     setSendState("sending");
-    setTimeout(() => setSendState("sent"), 1100);
-    setTimeout(() => setSendState("idle"), 3000);
+    try {
+      const res = await fetch(BASIN_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (!res.ok) throw new Error("submission failed");
+      setSendState("sent");
+      setName("");
+      setEmail("");
+      setMessage("");
+      setTimeout(() => setSendState("idle"), 3500);
+    } catch {
+      setSendState("error");
+      setTimeout(() => setSendState("idle"), 3500);
+    }
   };
 
   return (
@@ -73,6 +97,8 @@ export function Contact() {
       </Reveal>
 
       <Reveal
+        as="form"
+        onSubmit={handleSubmit}
         style={{
           textAlign: "left",
           border: "1px solid var(--border)",
@@ -103,6 +129,9 @@ export function Contact() {
             <span style={{ color: "var(--primary)" }}>&quot;name&quot;</span>
             <span style={{ color: "var(--text2)" }}>:</span>
             <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
               placeholder="Ada Lovelace"
               style={{
                 flex: 1,
@@ -124,6 +153,9 @@ export function Contact() {
             <span style={{ color: "var(--text2)" }}>:</span>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               placeholder="ada@example.com"
               style={{
                 flex: 1,
@@ -145,6 +177,9 @@ export function Contact() {
             <span style={{ color: "var(--text2)" }}>:</span>
             <textarea
               rows={2}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
               placeholder="Tell me about the system you're building..."
               style={{
                 flex: 1,
@@ -162,10 +197,15 @@ export function Contact() {
             />
           </div>
           <div style={{ color: "var(--text2)" }}>{"}"}</div>
-          <div style={{ marginTop: 18, display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ marginTop: 18, display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14 }}>
+            {sendState === "error" && (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12.5, color: "#e5484d" }}>
+                Something went wrong. Try again?
+              </span>
+            )}
             <button
-              onClick={handleSend}
-              disabled={sendState !== "idle"}
+              type="submit"
+              disabled={!canSend}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -179,6 +219,7 @@ export function Contact() {
                 border: "none",
                 borderRadius: 8,
                 cursor: sendState === "idle" ? "pointer" : "default",
+                opacity: sendState === "idle" && !canSend ? 0.5 : 1,
                 boxShadow: "0 8px 26px -10px var(--glow)",
                 transition: "transform .18s var(--ease), background-color .2s",
               }}
@@ -205,6 +246,7 @@ export function Contact() {
                 </>
               )}
               {sendState === "sent" && <>✓ 201 Created</>}
+              {sendState === "error" && <>Send request →</>}
             </button>
           </div>
         </div>

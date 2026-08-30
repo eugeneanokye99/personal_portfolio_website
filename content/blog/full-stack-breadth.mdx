@@ -1,0 +1,21 @@
+export const metadata = {
+  title: "Shipping Full-Stack: What Changes When You Own Both Ends",
+  date: "2026-07-03",
+  excerpt:
+    "Owning the API and the screen that consumes it removes a whole class of arguments about whose fault a bug is. Some notes on what shifts.",
+  tags: ["Full-Stack", "React", "Spring Boot"],
+};
+
+For a long time I thought of myself as a backend engineer who could "also do frontend." Working across Spring Boot, React, and occasionally Django or Node changed that framing. Owning both ends of a feature is a different job, not two half jobs stapled together.
+
+## The API design gets honest fast
+
+When you're the one calling your own endpoint from a React component, you feel every bad decision immediately. An endpoint that needs three round trips to render one screen stops being "the frontend team's problem" and becomes your Tuesday afternoon. That pressure produces better APIs than any design review does.
+
+## Performance is one conversation, not two
+
+Backend engineers optimize query plans. Frontend engineers chase Core Web Vitals. When you're both, you notice that a slow database query and a slow API contract produce the exact same symptom on the user's screen: a spinner that won't go away. I've started treating "time to usable" as a single budget that gets spent across the stack, instead of two separate budgets owned by two separate teams.
+
+## What I still hand off
+
+Full-stack doesn't mean solo. On larger projects I still lean on designers for UX decisions and on specialists for things like deep animation work or complex query tuning. Owning both ends changes what I default to building myself, not what I refuse to delegate.

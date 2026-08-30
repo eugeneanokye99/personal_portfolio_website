@@ -1,0 +1,23 @@
+export const metadata = {
+  title: "Three AWS Habits That Saved Me an Outage",
+  date: "2026-08-05",
+  excerpt:
+    "Three specific AWS practices, from IAM discipline to multi-AZ design, that turned near-misses into non-events.",
+  tags: ["AWS", "Cloud", "Reliability"],
+};
+
+Building out IAM automation, multi-AZ architectures, and CI/CD pipelines on AWS taught me a few habits the hard way. None of these are exotic. All three have saved me from an outage becoming a story I'd rather not tell.
+
+## Least-privilege IAM roles, checked automatically
+
+It's tempting to attach a broad managed policy to get unblocked and clean it up later. "Later" rarely comes. I now run automated baseline checks against every IAM role in an account, flagging anything wider than the role actually uses. The first time I ran this against a project that had grown for a year, it found a Lambda execution role with full S3 access it hadn't needed since its second week in production.
+
+## Multi-AZ isn't optional, it's the default
+
+A single-AZ deployment works right up until the moment AWS has a bad day in that zone. Spreading a load-balanced, autoscaling group across at least two availability zones costs almost nothing extra and turns a full outage into a brief, mostly invisible failover. I design for multi-AZ from the first architecture diagram now, not as a hardening pass before launch.
+
+## CI/CD pipelines should fail loudly, not deploy quietly
+
+A deploy pipeline that pushes to ECS without a health-check gate will happily roll out a broken container and let it serve 500s to real users until someone notices. Wiring health checks and automatic rollback into the pipeline means a bad deploy gets caught by the platform, not by a customer complaint.
+
+None of these are clever. They're just the difference between finding a problem in a dashboard at 2pm and finding it in a support ticket at 2am.

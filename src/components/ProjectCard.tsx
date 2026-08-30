@@ -62,19 +62,63 @@ export function ProjectCard({ project }: { project: Project }) {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
           <span style={{ color: "var(--primary)", fontFamily: "var(--font-mono)", fontSize: 13 }}>›</span>
-          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 16, color: "var(--text)" }}>
-            {project.name}
-          </span>
+          <div>
+            <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 16, color: "var(--text)" }}>
+              {project.name}
+            </span>
+            {project.subtitle && (
+              <span style={{ marginLeft: 8, fontFamily: "var(--font-code)", fontSize: 12, color: "var(--text2)" }}>
+                {project.subtitle}
+              </span>
+            )}
+          </div>
         </div>
         <a
-          href="https://github.com/eugeneanokye99"
+          href={project.link}
           target="_blank"
           rel="noopener"
+          aria-label={`Open ${project.name}`}
           style={{ position: "relative", color: "var(--text2)", textDecoration: "none", fontSize: 17, transition: "color .15s,transform .2s" }}
         >
           ↗
         </a>
       </div>
+
+      {project.preview && (
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener"
+          style={{
+            position: "relative",
+            display: "block",
+            height: 160,
+            borderRadius: 8,
+            overflow: "hidden",
+            border: "1px solid var(--border)",
+            background: "var(--surface-2)",
+          }}
+        >
+          <iframe
+            src={project.preview}
+            title={`${project.name} preview`}
+            loading="lazy"
+            tabIndex={-1}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "250%",
+              height: "250%",
+              transform: "scale(0.4)",
+              transformOrigin: "top left",
+              border: "none",
+              pointerEvents: "none",
+            }}
+          />
+        </a>
+      )}
+
       <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: "var(--text2)", flex: 1 }}>{project.desc}</p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
         {project.tags.map(([label, method]) => {
@@ -99,6 +143,18 @@ export function ProjectCard({ project }: { project: Project }) {
           );
         })}
       </div>
+
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener"
+        style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--primary)", textDecoration: "none" }}
+      >
+        ↗ {project.linkLabel}
+      </a>
+      {project.note && (
+        <div style={{ fontFamily: "var(--font-code)", fontSize: 11.5, color: "var(--text2)" }}>{project.note}</div>
+      )}
     </Reveal>
   );
 }

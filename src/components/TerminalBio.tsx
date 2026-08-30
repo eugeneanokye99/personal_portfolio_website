@@ -34,7 +34,7 @@ export function TerminalBio() {
         fontFamily: "var(--font-code)",
         fontSize: 13.5,
         lineHeight: 1.95,
-        minHeight: 280,
+        minHeight: 300,
         color: "var(--text)",
       }}
     >

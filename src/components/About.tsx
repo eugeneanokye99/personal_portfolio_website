@@ -50,7 +50,7 @@ export function About() {
               >
                 <Image
                   src="/profile.jpg"
-                  alt="Eugene Anokye"
+                  alt="Eugene Dokye Anokye"
                   fill
                   sizes="74px"
                   style={{ objectFit: "cover" }}
@@ -60,22 +60,32 @@ export function About() {
             </div>
             <div>
               <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: 18, color: "var(--text)" }}>
-                Eugene Anokye
+                Eugene Dokye Anokye
               </div>
               <div style={{ fontFamily: "var(--font-code)", fontSize: 13, color: "var(--text2)" }}>
-                Backend Software Engineer · Amali-Tech
+                Full-Stack Software Engineer
               </div>
             </div>
           </div>
           <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--text2)", margin: "0 0 18px" }}>
-            I think in services, contracts, and failure modes. My work centers on the parts of a
-            product users never see but always feel — the data models that stay sane at scale, the
-            APIs that stay backward-compatible, the queues that absorb the spike.
+            Five years in, I build across the stack: Spring Boot and Java on the backend, React and
+            TypeScript up front, with Django and Node.js in the mix whenever a problem calls for it.
+            I think in services, contracts, and failure modes, but I&apos;m just as comfortable
+            chasing a Core Web Vitals regression as I am hardening a REST API.
+          </p>
+          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--text2)", margin: "0 0 18px" }}>
+            Most of that work has happened inside agile teams: standups, sprint planning, retros,
+            the whole rhythm. I collaborate closely with designers, product owners, and other
+            engineers, and I&apos;d rather flag a blocker early than surprise someone at review
+            time. I&apos;ve led cross-functional teams and mentored junior developers, and the
+            mentoring side is genuinely one of my favorite parts of the job.
           </p>
           <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--text2)", margin: 0 }}>
-            Lately that means Java and Spring Boot in production, sharpened by an ongoing habit of
-            system-design study and daily algorithm practice. I care about clean code because the
-            next engineer to read it deserves a good day.
+            I&apos;m a committed learner: daily algorithm practice, ongoing system design study, and
+            a habit of picking apart unfamiliar codebases just to understand how they think.
+            Automated testing with JUnit and disciplined Git workflows keep that curiosity from
+            turning into chaos, and I care about clean code because the next engineer to read it
+            deserves a good day.
           </p>
         </Reveal>
 
