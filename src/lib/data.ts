@@ -41,6 +41,19 @@ export const stackData: StackCategory[] = [
   },
 ];
 
+export type Certification = {
+  name: string;
+  issuer: string;
+  date: string;
+  link?: string;
+};
+
+export const certificationsData: Certification[] = [
+  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
+  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
+  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
+];
+
 export type ProjectTagMethod = "get" | "post" | "svc" | "java";
 export type Project = {
   name: string;
@@ -217,6 +230,7 @@ export const bioLines: BioLine[] = [
 export const navLinks = [
   { href: "#about", label: "about" },
   { href: "#stack", label: "stack" },
+  { href: "#certifications", label: "certs" },
   { href: "#projects", label: "projects" },
   { href: "#activity", label: "activity" },
   { href: "#blog", label: "blog" },

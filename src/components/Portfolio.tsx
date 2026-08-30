@@ -8,6 +8,7 @@ import { Navbar } from "./Navbar";
 import { Hero } from "./Hero";
 import { About } from "./About";
 import { Stack } from "./Stack";
+import { Certifications } from "./Certifications";
 import { Projects } from "./Projects";
 import { Activity } from "./Activity";
 import { Blog } from "./Blog";
@@ -39,6 +40,7 @@ export function Portfolio({ posts, activity }: { posts: Post[]; activity: Github
           <Hero />
           <About />
           <Stack />
+          <Certifications />
           <Projects />
           <Activity activity={activity} />
           <Blog posts={posts} />
