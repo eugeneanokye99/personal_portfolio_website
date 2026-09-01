@@ -101,7 +101,7 @@ export function Hero() {
           </a>
           <a
             ref={downloadCvRef}
-            href="https://drive.google.com/uc?export=download&id=1JMee2NFyZCkuD-dOo6QH8LSFakELbfyS"
+            href="https://drive.google.com/uc?export=download&id=1iRSwXFhkXkibf7y6yGLo3ifkRCsWIN5e"
             target="_blank"
             rel="noopener"
             style={{
