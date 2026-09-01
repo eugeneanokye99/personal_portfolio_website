@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Reveal } from "./Reveal";
 import type { Certification } from "@/lib/data";
 
@@ -18,23 +19,46 @@ export function CertificationCard({ certification }: { certification: Certificat
         gap: 16,
       }}
     >
-      <div
-        style={{
-          flex: "none",
-          width: 42,
-          height: 42,
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: "1.5px solid var(--primary)",
-          color: "var(--primary)",
-          fontFamily: "var(--font-mono)",
-          fontSize: 16,
-        }}
-      >
-        ✓
-      </div>
+      {certification.image ? (
+        <div
+          style={{
+            flex: "none",
+            width: 48,
+            height: 48,
+            borderRadius: 10,
+            overflow: "hidden",
+            border: "1px solid var(--border)",
+            background: "#fff",
+            position: "relative",
+          }}
+        >
+          <Image
+            src={certification.image}
+            alt={certification.name}
+            fill
+            style={{ objectFit: "contain" }}
+            sizes="48px"
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            flex: "none",
+            width: 42,
+            height: 42,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1.5px solid var(--primary)",
+            color: "var(--primary)",
+            fontFamily: "var(--font-mono)",
+            fontSize: 16,
+          }}
+        >
+          ✓
+        </div>
+      )}
       <div style={{ minWidth: 0 }}>
         <div style={{ fontWeight: 700, fontSize: 15, color: "var(--text)", marginBottom: 3 }}>
           {certification.name}

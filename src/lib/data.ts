@@ -46,12 +46,27 @@ export type Certification = {
   issuer: string;
   date: string;
   link?: string;
+  image?: string;
 };
 
 export const certificationsData: Certification[] = [
-  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
-  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
-  { name: "Certification name", issuer: "Issuing organization", date: "2026", link: "#" },
+  {
+    name: "Project Management",
+    issuer: "Google (Coursera)",
+    date: "2026",
+    image: "/certifications/google-project-management.png",
+  },
+  {
+    name: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services",
+    date: "2026",
+    image: "/certifications/aws-cloud-practitioner.png",
+  },
+  {
+    name: "Certificate in Splicing and OTDR Testing",
+    issuer: "Johvic Fibertech Solutions",
+    date: "2026",
+  },
 ];
 
 export type ProjectTagMethod = "get" | "post" | "svc" | "java";
