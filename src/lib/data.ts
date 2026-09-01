@@ -104,6 +104,7 @@ export const projectsData: Project[] = [
     ],
     link: "https://shopyosgh.com",
     linkLabel: "shopyosgh.com",
+    preview: "https://shopyosgh.com",
     note: "Web app: app.shopyosgh.com · Android live · iOS in progress",
   },
   {
@@ -116,6 +117,7 @@ export const projectsData: Project[] = [
     ],
     link: "https://personalexpensetracker-drab.vercel.app/",
     linkLabel: "live demo",
+    preview: "https://personalexpensetracker-drab.vercel.app/",
   },
   {
     name: "CPS",
@@ -128,6 +130,7 @@ export const projectsData: Project[] = [
     ],
     link: "https://trills-sigma.vercel.app/",
     linkLabel: "live demo",
+    preview: "https://trills-sigma.vercel.app/",
   },
   {
     name: "ShiftSync",

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Reveal } from "./Reveal";
 import type { Certification } from "@/lib/data";
 
@@ -29,15 +28,12 @@ export function CertificationCard({ certification }: { certification: Certificat
             overflow: "hidden",
             border: "1px solid var(--border)",
             background: "#fff",
-            position: "relative",
           }}
         >
-          <Image
+          <img
             src={certification.image}
             alt={certification.name}
-            fill
-            style={{ objectFit: "contain" }}
-            sizes="48px"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>
       ) : (
